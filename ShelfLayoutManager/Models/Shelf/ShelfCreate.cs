@@ -16,6 +16,7 @@ public class CreateRowRequest
 {
     [Required]
     public int Number { get; set; }
+    public int CabinetNumber { get; set; }
     public List<Lane> Lanes { get; set; }
     public int PositionZ { get; set; }
     public int Height { get; set; }
@@ -25,6 +26,8 @@ public class CreateLaneRequest
 {
     [Required]
     public int Number { get; set; }
+    public int CabinetNumber { get; set; }
+    public int RowNumber { get; set; }
     public string JanCode { get; set; }
     public int Quantity { get; set; }
     public int PositionX { get; set; }

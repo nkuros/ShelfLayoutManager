@@ -30,7 +30,6 @@ public class UpdateLaneRequest
     [Required]
     public int RowNumber { get; set; }
     [Required]
-    public int LaneNumber { get; set; }
     public int Number { get; set; }
     public string JanCode { get; set; }
     public int Quantity { get; set; }

@@ -5,7 +5,7 @@ namespace ShelfLayoutManager.Entities
 {
     public class SKU
     {
-        [unique]
+        // TODO: MAKE UNIQUE
         public string JanCode { get; set; }
         public string Name { get; set; }
         public string DrinkSize { get; set; }

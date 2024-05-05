@@ -6,6 +6,6 @@ Install automapper
 1 make sure nuget is installed https://learn.microsoft.com/en-us/nuget/install-nuget-client-tools?tabs=windows
 dotnet add package AutoMapper
 
-
-dotnet add package Microsoft.EntityFrameworkCore.SqlServer -v6.0.0
+Install postgres
+dotnet add package Microsoft.EntityFrameworkCore.PostgreSQL  -v6.0.3
 dotnet add package Microsoft.EntityFrameworkCore -v 6.0.3
