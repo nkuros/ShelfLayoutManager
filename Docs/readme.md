@@ -7,3 +7,5 @@ Install automapper
 dotnet add package AutoMapper
 
 
+dotnet add package Microsoft.EntityFrameworkCore.SqlServer -v6.0.0
+dotnet add package Microsoft.EntityFrameworkCore -v 6.0.3
