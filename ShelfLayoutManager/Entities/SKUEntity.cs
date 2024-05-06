@@ -1,11 +1,11 @@
 using System.ComponentModel.DataAnnotations;
-using MessagePack;
+
 
 namespace ShelfLayoutManager.Entities
 {
     public class SKU
     {
-        // TODO: MAKE UNIQUE
+        [Key]
         public string JanCode { get; set; }
         public string Name { get; set; }
         public string DrinkSize { get; set; }
@@ -18,6 +18,8 @@ namespace ShelfLayoutManager.Entities
 
     public class ProductSize
     {
+        [Key]
+        public int Id { get; set; }
         public double Width { get; set; }
         public double Depth { get; set; }
         public double Height { get; set; }

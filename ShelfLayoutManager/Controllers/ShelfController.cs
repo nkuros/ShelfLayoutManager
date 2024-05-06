@@ -11,118 +11,155 @@ using ShelfLayoutManager.Services;
 
 public class CabinetController : ControllerBase
 {
-    private readonly IShelfService _shelfService;
+    private readonly ICabinetService _cabinetService;
     private readonly IMapper _mapper;
 
-    public CabinetController(IShelfService cabinetService, IMapper mapper)
+    public CabinetController(ICabinetService cabinetService, IMapper mapper)
     {
-        _shelfService = cabinetService;
+        _cabinetService = cabinetService;
         _mapper = mapper;
     }
 
     [HttpGet]
     public IActionResult GetAllCabinets()
     {
-        var cabinets = _shelfService.GetAllCabinets();
+        var cabinets = _cabinetService.GetAllCabinets();
         return Ok(cabinets);
     }
+
     [HttpGet("{number}")]
     public IActionResult GetCabinetByNumber(int number)
     {
-        var cabinet = _shelfService.GetCabinetByNumber(number);
+        var cabinet = _cabinetService.GetCabinetByNumber(number);
         return Ok(cabinet);
     }
 
-    [HttpPost]
-    public IActionResult CreateCabinet([FromBody] CreateCabinetRequest request)
+    [HttpGet("{number}/rows")]
+    public IActionResult GetRowsForCabinet(int number)
     {
-        _shelfService.CreateCabinet(request);
+        var rows = _cabinetService.GetRowsFromCabinet(number);
+        return Ok(rows);
+    }
+
+    [HttpPost]
+    public IActionResult CreateCabinet(CabinetModel request)
+    {
+        _cabinetService.CreateCabinet(request);
         return Ok(new { message = "Cabinet created" });
     }
 
-    [HttpPut("{number}")]
-    public IActionResult UpdateCabinet(int number, [FromBody] UpdateCabinetRequest request)
+    [HttpPut]
+    public IActionResult UpdateCabinet([FromHeader]int number,  CabinetModel request)
     {
-        _shelfService.UpdateCabinet(number, request);
+        _cabinetService.UpdateCabinet(number, request);
         return Ok(new { message = "Cabinet updated" });
     }
 
-    [HttpDelete("{number}")]
-    public IActionResult DeleteCabinet(int number)
+    [HttpDelete]
+    public IActionResult DeleteCabinet([FromHeader]int number)
     {
-        _shelfService.DeleteCabinet(number);
+        _cabinetService.DeleteCabinet(number);
         return Ok(new { message = "Cabinet deleted" });
+    }
+
+}
+
+
+[ApiController]
+[Route("[controller]")]
+public class RowControlller : ControllerBase
+{
+    private readonly IRowService _rowService;
+    private readonly IMapper _mapper;
+
+    public RowControlller(IRowService rowService, IMapper mapper)
+    {
+        _rowService = rowService;
+        _mapper = mapper;
     }
 
     [HttpGet]
     public IActionResult GetAllRows()
     {
-        var rows = _shelfService.GetAllRows();
+        var rows = _rowService.GetAllRows();
         return Ok(rows);
     }
 
     [HttpGet("{rowNumber}")]
-    public IActionResult GetRowByNumber(int cabinetNumber, int rowNumber)
+    public IActionResult GetRowByNumber(int rowNumber)
     {
-        var row = _shelfService.GetRowByNumber(rowNumber);
+        var row = _rowService.GetRowByNumber(rowNumber);
         return Ok(row);
     }
 
-    [HttpPost("{cabinetNumber}")]
-    public IActionResult CreateRow(int cabinetNumber, [FromBody] CreateRowRequest request)
+    [HttpPost]
+    public IActionResult CreateRow([FromHeader] int cabinetNumber, RowModel request)
     {
-        _shelfService.CreateRow(cabinetNumber, request);
+        _rowService.CreateRow(cabinetNumber, request);
         return Ok(new { message = "Row created" });
     }
 
-    [HttpPut("{rowNumber}")]
-    public IActionResult UpdateRow(int rowNumber, [FromBody] UpdateRowRequest request)
+    [HttpPut]
+    public IActionResult UpdateRow([FromHeader]int rowNumber,  RowModel request)
     {
-        _shelfService.UpdateRow(rowNumber, request);
+        _rowService.UpdateRow(rowNumber, request);
         return Ok(new { message = "Row updated" });
     }
 
-    [HttpDelete("{cabinetNumber}/rows/{rowNumber}")]
-    public IActionResult DeleteRow(int cabinetNumber, int rowNumber)
+    [HttpDelete]
+    public IActionResult DeleteRow([FromHeader]int cabinetNumber, int rowNumber)
     {
-        _shelfService.DeleteRow(cabinetNumber, rowNumber);
+        _rowService.DeleteRow(cabinetNumber, rowNumber);
         return Ok(new { message = "Row deleted" });
     }
+}
 
-    [HttpGet("")]
+[ApiController]
+[Route("[controller]")]
+
+public class LaneController : ControllerBase
+{
+    private readonly ILaneService _laneService;
+    private readonly IMapper _mapper;
+
+    public LaneController(ILaneService laneService, IMapper mapper)
+    {
+        _laneService = laneService;
+        _mapper = mapper;
+    }
+
+    [HttpGet]
     public IActionResult GetAllLanes()
     {
-        var lanes = _shelfService.GetAllLanes();
+        var lanes = _laneService.GetAllLanes();
         return Ok(lanes);
     }
 
-    [HttpGet("{cabinetNumber}/rows/{rowNumber}/lanes/{laneNumber}")]
-    public IActionResult GetLaneByNumber(int cabinetNumber, int rowNumber, int laneNumber)
+    [HttpGet("{laneNumber}")]
+    public IActionResult GetLaneByNumber(int laneNumber)
     {
-        var lane = _shelfService.GetLaneByNumber(laneNumber);
+        var lane = _laneService.GetLaneByNumber(laneNumber);
         return Ok(lane);
     }
 
-    [HttpPost("{rowNumber}")]
-    public IActionResult CreateLane(int rowNumber, [FromBody] CreateLaneRequest request)
+    [HttpPost]
+    public IActionResult CreateLane( [FromHeader]int rowNumber, LaneModel request)
     {
-        _shelfService.CreateLane(rowNumber, request);
+        _laneService.CreateLane(rowNumber, request);
         return Ok(new { message = "Lane created" });
     }
 
-    [HttpPut("{rowNumber}/lanes/{laneNumber}")]
-    public IActionResult UpdateLane( int rowNumber, int laneNumber, [FromBody] UpdateLaneRequest request)
+    [HttpPut]
+    public IActionResult UpdateLane([FromHeader] int rowNumber,[FromHeader]  int laneNumber, LaneModel request)
     {
-        _shelfService.UpdateLane(laneNumber, request);
+        _laneService.UpdateLane(laneNumber, request);
         return Ok(new { message = "Lane updated" });
     }
 
-    [HttpDelete("rows/{rowNumber}/lanes/{laneNumber}")]
-    public IActionResult DeleteLane(int rowNumber, int laneNumber)
+    [HttpDelete("{laneNumber}")]
+    public IActionResult DeleteLane([FromHeader] int rowNumber,[FromHeader]  int laneNumber)
     {
-        _shelfService.DeleteLane(rowNumber, laneNumber);
+        _laneService.DeleteLane(rowNumber, laneNumber);
         return Ok(new { message = "Lane deleted" });
     }
-
-    
 }

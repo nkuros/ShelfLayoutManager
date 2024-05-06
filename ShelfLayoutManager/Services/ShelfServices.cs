@@ -2,78 +2,93 @@ namespace ShelfLayoutManager.Services;
 
 using AutoMapper;
 
-
 using System.ComponentModel.DataAnnotations;
 using ShelfLayoutManager.Entities;
 using ShelfLayoutManager.Helpers;
 using ShelfLayoutManager.Context;
 using ShelfLayoutManager.Models;
 
-public interface IShelfService
+public interface ICabinetService
 {
     Cabinet GetCabinetByNumber(int number);
     IEnumerable<Cabinet> GetAllCabinets();
+    IEnumerable<Row> GetRowsFromCabinet(int cabinetNumber);
 
-    Row GetRowByNumber(int number);
-    IEnumerable<Row> GetAllRows();
-
-    Lane GetLaneByNumber(int laneNumber);
-    IEnumerable<Lane> GetAllLanes();
-
-    void CreateCabinet(CreateCabinetRequest model);
-    void UpdateCabinet(int cabinetNumber, UpdateCabinetRequest model);
+    void CreateCabinet(CabinetModel model);
+    void UpdateCabinet(int cabinetNumber, CabinetModel model);
     void DeleteCabinet(int cabinetNumber);
 
-    void CreateRow(int cabinetNumber ,CreateRowRequest model);
-    void UpdateRow(int rowNumber, UpdateRowRequest model);
+}
+
+public interface IRowService
+{
+    Row GetRowByNumber(int number);
+    IEnumerable<Row> GetAllRows();
+    IEnumerable<Lane> GetLanesFromRow(int rowNumber);
+
+    void CreateRow(int cabinetNumber ,RowModel model);
+    void UpdateRow(int rowNumber, RowModel model);
     void DeleteRow(int cabinetNumber, int rowNumber);
 
-    void CreateLane(int rowNumber,CreateLaneRequest model);
-    void UpdateLane(int rowNumber, UpdateLaneRequest model);
+}
+
+public interface ILaneService
+{
+    Lane GetLaneByNumber(int laneNumber);
+    IEnumerable<Lane> GetAllLanes();
+  
+    void CreateLane(int rowNumber,LaneModel model);
+    void UpdateLane(int laneNumber, LaneModel model);
     void DeleteLane(int rowNumber, int laneNumber);
 }
 
-public class ShelfService : IShelfService 
-{
-    private  CabinetContext _cabinetContext;
-    private  RowContext _rowContext;
 
-    private  LaneContext _laneContext; 
+public class CabinetService : ICabinetService 
+{
+    private  ShelfContext _context;
+
 
     private readonly IMapper _mapper;
 
-    public ShelfService(CabinetContext cabinetContext,RowContext rowContext, LaneContext laneContext, IMapper mapper)
+    public CabinetService(ShelfContext context, IMapper mapper)
     {
-        _cabinetContext = cabinetContext;
-        _rowContext = rowContext;
-        _laneContext = laneContext;
+        _context = context;
+
         _mapper = mapper;
     }
     public Cabinet GetCabinetByNumber(int cabinetNumber)
     {
-        var cabinet = _cabinetContext.Cabinets.Find(cabinetNumber);
-        if (cabinet == null) throw new ValidationException("Cabinet not found");
+        var cabinet = _context.Cabinets.Find(cabinetNumber);
+        if (cabinet == null) throw new KeyNotFoundException("Cabinet not found");
         return cabinet;
     }
     public IEnumerable<Cabinet> GetAllCabinets()
     {
-        return _cabinetContext.Cabinets;
+        return _context.Cabinets;
     }
-    public void CreateCabinet(CreateCabinetRequest model)
+
+    public IEnumerable<Row> GetRowsFromCabinet(int cabinetNumber)
+    {
+        var cabinet = _context.Cabinets.Find(cabinetNumber);
+        if (cabinet == null) throw new KeyNotFoundException("Cabinet not found");
+        return cabinet.Rows;
+    }
+
+    public void CreateCabinet(CabinetModel model)
     {
         var cabinet = _mapper.Map<Cabinet>(model);
-        _cabinetContext.Cabinets.Add(cabinet);
-        _cabinetContext.SaveChanges();
+        _context.Cabinets.Add(cabinet);
+        _context.SaveChanges();
     }
-      public void UpdateCabinet(int cabinetNumber, UpdateCabinetRequest model)
+      public void UpdateCabinet(int cabinetNumber, CabinetModel model)
     {
 
         try
         {
             var cabinet = GetCabinetByNumber(cabinetNumber);
             _mapper.Map(model, cabinet);
-            _cabinetContext.Cabinets.Update(cabinet);
-            _cabinetContext.SaveChanges();
+            _context.Cabinets.Update(cabinet);
+            _context.SaveChanges();
         }
         catch (Exception e)
         {
@@ -86,8 +101,8 @@ public class ShelfService : IShelfService
         try
         {
             var cabinet = GetCabinetByNumber(cabinetNumber);
-            _cabinetContext.Cabinets.Remove(cabinet);
-            _cabinetContext.SaveChanges();
+            _context.Cabinets.Remove(cabinet);
+            _context.SaveChanges();
         }
         catch (Exception e)
         {
@@ -95,46 +110,62 @@ public class ShelfService : IShelfService
         }
     }
     
+}
 
+
+public class RowService : IRowService 
+{
+
+    private  ShelfContext _context;
+
+
+    private readonly IMapper _mapper;
+
+    public RowService( ShelfContext context, IMapper mapper)
+    {
+
+        _context = context;
+        _mapper = mapper;
+    }
+
+    
     public Row GetRowByNumber(int number)
     {
-        var row = _rowContext.Rows.Find(number);
-        if (row == null) throw new ValidationException("Row not found");
+        var row = _context.Rows.Find(number);
+        if (row == null) throw new KeyNotFoundException("Row not found");
         return row;
     }
     public IEnumerable<Row> GetAllRows()
     {
-        return _rowContext.Rows;
+        return _context.Rows;
     }
-    public IEnumerable<Row> GetRowsFromCabinet(int cabinetNumber)
+
+    public IEnumerable<Lane> GetLanesFromRow(int rowNumber)
     {
-        var cabinet = _cabinetContext.Cabinets.Find(cabinetNumber);
-        if (cabinet == null) throw new ValidationException("Cabinet not found");
-        return cabinet.Rows;
+        var row = GetRowByNumber(rowNumber);
+        return row.Lanes;
     }
-    public void CreateRow(int cabinetNumber, CreateRowRequest model)
+
+    public void CreateRow(int cabinetNumber, RowModel model)
     {
 
-        var cabinet = GetCabinetByNumber(cabinetNumber);
+        var cabinet = _context.Cabinets.Find(cabinetNumber);
         var row = _mapper.Map<Row>(model);
 
 
-        _rowContext.Rows.Add(row);
-        _rowContext.SaveChanges();
+        _context.Rows.Add(row);
         cabinet.Rows.Add(row);
-        // _cabinetContext.Cabinets.Update(cabinet);
-        // _cabinetContext.SaveChanges();
-
+        _context.SaveChanges();
 
     }
 
-    public void UpdateRow(int number, UpdateRowRequest model)
+    public void UpdateRow(int number, RowModel model)
     {
         try
         {
             var row = GetRowByNumber(number);
             row = _mapper.Map(model, row);
-            _rowContext.SaveChanges();
+            _context.SaveChanges();
         }
         catch (Exception e)
         {
@@ -146,15 +177,13 @@ public class ShelfService : IShelfService
     {
         try
         {
-            var cabinet = GetCabinetByNumber(cabinetNumber);
+            var cabinet = _context.Cabinets.Find(cabinetNumber);
             var row = GetRowByNumber(rowNumber);
 
             cabinet.Rows.Remove(row);
-            _rowContext.Rows.Remove(row);
-            _rowContext.SaveChanges();
+            _context.Rows.Remove(row);
+            _context.SaveChanges();
 
-            // _cabinetContext.Cabinets.Remove(cabinet);
-            // _cabinetContext.SaveChanges();
         }
         catch (Exception e)
         {
@@ -163,73 +192,74 @@ public class ShelfService : IShelfService
 
     }
 
+
+}
+
+
+public class LaneService : ILaneService
+{
+    private  ShelfContext _context;
+
+    private readonly IMapper _mapper;
+
+    public LaneService(ShelfContext context, IMapper mapper)
+    {
+        _context = context;
+        _mapper = mapper;
+    }
+
     public Lane GetLaneByNumber(int laneNumber)
     {
-        var lane = _laneContext.Lanes.Find(laneNumber);
-        if (lane == null) throw new ValidationException("Lane not found");
+        var lane = _context.Lanes.Find(laneNumber);
+        if (lane == null) throw new KeyNotFoundException("Lane not found");
         return lane;
     }
     public IEnumerable<Lane> GetAllLanes()
     {
-        return _laneContext.Lanes;
+        return _context.Lanes;
     }
 
-
-
-    public void CreateLane(int rowNumber,CreateLaneRequest model)
+    public void CreateLane(int rowNumber, LaneModel model)
     {
-        try
-        {
-            var row = GetRowByNumber(rowNumber);
-            var lane = _mapper.Map<Lane>(model);
-            _laneContext.Lanes.Add(lane);
-            row.Lanes.Add(lane);
-            _laneContext.SaveChanges();
-            // _rowContext.Lanes.Add(lane);
-        // _rowContext.SaveChanges();
-        }
-        catch (Exception e)
-        {
-            throw new ValidationException("Could not create lane. Details: {error}", e);
-        }
+        // var row = _context.Rows.Find(rowNumber);
+        var lane = _mapper.Map<Lane>(model);
+
+
+        _context.Lanes.Add(lane);
+        // row.Lanes.Add(lane);
+        _context.SaveChanges();
+
 
     }
 
-    public void UpdateLane( int laneNumber, UpdateLaneRequest model)
+    public void UpdateLane(int laneNumber, LaneModel model)
     {
         try
         {
             var lane = GetLaneByNumber(laneNumber);
             _mapper.Map(model, lane);
-            _laneContext.Lanes.Update(lane);
-            _laneContext.SaveChanges();
+            _context.Lanes.Update(lane);
+            _context.SaveChanges();
         }
         catch (Exception e)
         {
             throw new ValidationException("Could not update lane. Details: {error}", e);
         }
-
     }
 
-    public void DeleteLane(int rowNumber,int laneNumber)
+    public void DeleteLane(int rowNumber, int laneNumber)
     {
         try
         {
+            var row = _context.Rows.Find(rowNumber);
             var lane = GetLaneByNumber(laneNumber);
-            var row = GetRowByNumber(rowNumber);
-
             row.Lanes.Remove(lane);
-            // _rowContext.Lanes.Remove(lane);
-            // _rowContext.SaveChanges();
-            _laneContext.Lanes.Remove(lane);
-            _laneContext.SaveChanges();
-
+            _context.Lanes.Remove(lane);
+            _context.SaveChanges();
         }
         catch (Exception e)
         {
             throw new ValidationException("Could not delete lane. Details: {error}", e);
         }
-
     }
-
 }
