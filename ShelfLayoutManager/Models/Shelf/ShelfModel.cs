@@ -35,31 +35,25 @@ public class PositionModel
 
 public class RowModel
 {
-    [Required]
-    public int CabinetNumber { get; set; }
+
     [Required]
     public List<Lane> Lanes { get; set; }
     [Required]
     public int PositionZ { get; set; }
     [Required]
-    public RowSizeModel Size { get; set; }
+    public int Height { get; set; }
+    // public RowSizeModel Size { get; set; }
 }
 
-public class RowSizeModel
-{
-    [Required]
-    public int Height { get; set; }
-}
+// public class RowSizeModel
+// {
+//     [Required]
+//     public int Height { get; set; }
+// }
 
 public class LaneModel
 {
-    [Required]
-    public int CabinetNumber { get; set; }
-    [Required]
-    public int RowNumber { get; set; }
-    [Required]
     public string JanCode { get; set; }
-    [Required]
     public int Quantity { get; set; }
     [Required]
     public int PositionX { get; set; }

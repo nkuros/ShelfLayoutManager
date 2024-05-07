@@ -52,3 +52,15 @@ C:\Users\nkuros\projects\TXCodingChallenge\ShelfLayoutManager\ShelfLayoutManager
 C:\Users\nkuros\projects\TXCodingChallenge\ShelfLayoutManager\ShelfLayoutManager\obj\Debug\net6.0\ShelfLayoutManager.pdb
 C:\Users\nkuros\projects\TXCodingChallenge\ShelfLayoutManager\ShelfLayoutManager\obj\Debug\net6.0\ShelfLayoutManager.genruntimeconfig.cache
 C:\Users\nkuros\projects\TXCodingChallenge\ShelfLayoutManager\ShelfLayoutManager\obj\Debug\net6.0\ref\ShelfLayoutManager.dll
+C:\Users\nkuros\projects\TXCodingChallenge\ShelfLayoutManager\ShelfLayoutManager\bin\Debug\net6.0\Microsoft.Extensions.Caching.Abstractions.dll
+C:\Users\nkuros\projects\TXCodingChallenge\ShelfLayoutManager\ShelfLayoutManager\bin\Debug\net6.0\Microsoft.Extensions.DependencyInjection.dll
+C:\Users\nkuros\projects\TXCodingChallenge\ShelfLayoutManager\ShelfLayoutManager\bin\Debug\net6.0\Microsoft.Extensions.DependencyModel.dll
+C:\Users\nkuros\projects\TXCodingChallenge\ShelfLayoutManager\ShelfLayoutManager\bin\Debug\net6.0\Microsoft.Extensions.Logging.dll
+C:\Users\nkuros\projects\TXCodingChallenge\ShelfLayoutManager\ShelfLayoutManager\bin\Debug\net6.0\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\nkuros\projects\TXCodingChallenge\ShelfLayoutManager\ShelfLayoutManager\bin\Debug\net6.0\Mono.TextTemplating.dll
+C:\Users\nkuros\projects\TXCodingChallenge\ShelfLayoutManager\ShelfLayoutManager\bin\Debug\net6.0\Npgsql.dll
+C:\Users\nkuros\projects\TXCodingChallenge\ShelfLayoutManager\ShelfLayoutManager\bin\Debug\net6.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:\Users\nkuros\projects\TXCodingChallenge\ShelfLayoutManager\ShelfLayoutManager\bin\Debug\net6.0\System.CodeDom.dll
+C:\Users\nkuros\projects\TXCodingChallenge\ShelfLayoutManager\ShelfLayoutManager\bin\Debug\net6.0\System.Text.Encodings.Web.dll
+C:\Users\nkuros\projects\TXCodingChallenge\ShelfLayoutManager\ShelfLayoutManager\bin\Debug\net6.0\System.Text.Json.dll
+C:\Users\nkuros\projects\TXCodingChallenge\ShelfLayoutManager\ShelfLayoutManager\bin\Debug\net6.0\runtimes\browser\lib\net6.0\System.Text.Encodings.Web.dll

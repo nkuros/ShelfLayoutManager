@@ -53,7 +53,6 @@ public class CabinetService : ICabinetService
     public CabinetService(ShelfContext context, IMapper mapper)
     {
         _context = context;
-
         _mapper = mapper;
     }
     public Cabinet GetCabinetByNumber(int cabinetNumber)
@@ -69,8 +68,7 @@ public class CabinetService : ICabinetService
 
     public IEnumerable<Row> GetRowsFromCabinet(int cabinetNumber)
     {
-        var cabinet = _context.Cabinets.Find(cabinetNumber);
-        if (cabinet == null) throw new KeyNotFoundException("Cabinet not found");
+        var cabinet = GetCabinetByNumber(cabinetNumber);
         return cabinet.Rows;
     }
 
@@ -165,6 +163,7 @@ public class RowService : IRowService
         {
             var row = GetRowByNumber(number);
             row = _mapper.Map(model, row);
+            _context.Rows.Update(row);
             _context.SaveChanges();
         }
         catch (Exception e)
@@ -221,12 +220,12 @@ public class LaneService : ILaneService
 
     public void CreateLane(int rowNumber, LaneModel model)
     {
-        // var row = _context.Rows.Find(rowNumber);
+        var row = _context.Rows.Find(rowNumber);
         var lane = _mapper.Map<Lane>(model);
 
 
         _context.Lanes.Add(lane);
-        // row.Lanes.Add(lane);
+        row.Lanes.Add(lane);
         _context.SaveChanges();
 
 
@@ -253,6 +252,7 @@ public class LaneService : ILaneService
         {
             var row = _context.Rows.Find(rowNumber);
             var lane = GetLaneByNumber(laneNumber);
+            
             row.Lanes.Remove(lane);
             _context.Lanes.Remove(lane);
             _context.SaveChanges();

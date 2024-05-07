@@ -15,8 +15,8 @@ public class ShelfContext : DbContext
     }
     protected override void OnConfiguring(DbContextOptionsBuilder options)
     {
-        // in memory database used for simplicity, change to a real db for production applications
-        options.UseInMemoryDatabase("TestDb");
+        options.UseNpgsql(Configuration.GetConnectionString("WebApiDatabase"));
+        // options.UseInMemoryDatabase("TestDb");
     }
 
     public DbSet<Cabinet> Cabinets { get; set; }

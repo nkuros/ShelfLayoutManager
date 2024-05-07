@@ -3,6 +3,7 @@ using ShelfLayoutManager.Services;
 using ShelfLayoutManager.Context;
 using ShelfLayoutManager.Helpers;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -30,6 +31,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 var app = builder.Build();
+// builder.Services.AddGrpc();      
+// builder.Services.AddMagicOnion();
 
 // configure HTTP request pipeline
 {
@@ -41,7 +44,6 @@ var app = builder.Build();
 
     // global error handler
     app.UseMiddleware<ErrorHandlerMiddleware>();
-
     app.MapControllers();
 }
 

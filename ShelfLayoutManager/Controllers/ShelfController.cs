@@ -8,7 +8,6 @@ using ShelfLayoutManager.Services;
 
 [ApiController]
 [Route("[controller]")]
-
 public class CabinetController : ControllerBase
 {
     private readonly ICabinetService _cabinetService;
@@ -92,6 +91,13 @@ public class RowControlller : ControllerBase
         return Ok(row);
     }
 
+    [HttpGet("{number}/lanes")]
+    public IActionResult GetRowsForCabinet(int number)
+    {
+        var rows = _rowService.GetLanesFromRow(number);
+        return Ok(rows);
+    }
+
     [HttpPost]
     public IActionResult CreateRow([FromHeader] int cabinetNumber, RowModel request)
     {
@@ -116,7 +122,6 @@ public class RowControlller : ControllerBase
 
 [ApiController]
 [Route("[controller]")]
-
 public class LaneController : ControllerBase
 {
     private readonly ILaneService _laneService;
@@ -156,7 +161,7 @@ public class LaneController : ControllerBase
         return Ok(new { message = "Lane updated" });
     }
 
-    [HttpDelete("{laneNumber}")]
+    [HttpDelete]
     public IActionResult DeleteLane([FromHeader] int rowNumber,[FromHeader]  int laneNumber)
     {
         _laneService.DeleteLane(rowNumber, laneNumber);
